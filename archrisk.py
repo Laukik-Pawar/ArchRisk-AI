@@ -79,11 +79,19 @@ Do not invent missing dependencies, components, or redundancy. No markdown."""
         client=client,
         model=os.environ.get("GEMINI_MODEL", "gemini-3.8-flash"),
         contents=instruction + "\n\nArchitecture description:\n" + text,
+        
         config=types.GenerateContentConfig(
             response_mime_type="application/json",
             temperature=0
         ),
-    ),
+    )
+
+    if not response.text:
+        raise RuntimeError("Gemini returned an empty architecture extraction.")
+
+    data = json.loads(response.text)
+    return validate(data)
+
 
 
 def build_graph(data):
