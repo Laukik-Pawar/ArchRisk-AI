@@ -1,0 +1,30 @@
+{
+  "system": "E-commerce microservices reference architecture",
+  "edge_semantics": "source depends_on target",
+  "components": [
+    {"id":"gateway","name":"API Gateway","type":"gateway","description":"Routes customer-facing requests","criticality":0.9},
+    {"id":"auth","name":"Authentication Service","type":"service","description":"Authenticates customers","criticality":0.8},
+    {"id":"catalog","name":"Product Catalog","type":"service","description":"Provides product listings","criticality":0.7},
+    {"id":"cart","name":"Cart Service","type":"service","description":"Manages shopping carts","criticality":0.7},
+    {"id":"orders","name":"Order Service","type":"service","description":"Processes customer orders","criticality":1.0},
+    {"id":"payment","name":"Payment Service","type":"service","description":"Handles payments","criticality":1.0},
+    {"id":"inventory","name":"Inventory Service","type":"service","description":"Manages product stock","criticality":0.9},
+    {"id":"notification","name":"Notification Service","type":"service","description":"Sends notifications asynchronously","criticality":0.3},
+    {"id":"catalog_db","name":"Catalog Database","type":"database","description":"Stores product catalog","criticality":0.8},
+    {"id":"order_db","name":"Order Database","type":"database","description":"Stores order and payment records","criticality":1.0},
+    {"id":"inventory_db","name":"Inventory Database","type":"database","description":"Stores inventory state","criticality":0.9},
+    {"id":"user_db","name":"User Database","type":"database","description":"Stores customer identities","criticality":0.8},
+    {"id":"cache","name":"Cache Service","type":"cache","description":"Provides cached data","criticality":0.5},
+    {"id":"queue","name":"Message Queue","type":"queue","description":"Transfers asynchronous events","criticality":0.6},
+    {"id":"provider","name":"Payment Provider","type":"external","description":"External payment processing integration","criticality":1.0}
+  ],
+  "dependencies": [
+    {"source":"gateway","target":"auth"},{"source":"gateway","target":"catalog"},{"source":"gateway","target":"cart"},{"source":"gateway","target":"orders"},
+    {"source":"catalog","target":"catalog_db"},{"source":"catalog","target":"cache"},
+    {"source":"cart","target":"cache"},{"source":"cart","target":"inventory"},
+    {"source":"orders","target":"payment"},{"source":"orders","target":"inventory"},{"source":"orders","target":"order_db"},{"source":"orders","target":"queue"},
+    {"source":"payment","target":"provider"},{"source":"payment","target":"order_db"},
+    {"source":"inventory","target":"inventory_db"},{"source":"inventory","target":"queue"},
+    {"source":"notification","target":"queue"},{"source":"auth","target":"user_db"}
+  ]
+}

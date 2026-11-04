@@ -1,0 +1,5 @@
+- **Message Queue**: 5 downstream consumer(s) could be affected (36% of other components). Review this dependency for failover, redundancy, and graceful degradation; verify with engineering owners.
+- **Inventory Database**: 4 downstream consumer(s) could be affected (29% of other components). Review this dependency for failover, redundancy, and graceful degradation; verify with engineering owners.
+- **Inventory Service**: 3 downstream consumer(s) could be affected (21% of other components). Review this dependency for failover, redundancy, and graceful degradation; verify with engineering owners.
+- **Order Database**: 3 downstream consumer(s) could be affected (21% of other components). Review this dependency for failover, redundancy, and graceful degradation; verify with engineering owners.
+- **Cache Service**: 3 downstream consumer(s) could be affected (21% of other components). Review this dependency for failover, redundancy, and graceful degradation; verify with engineering owners.

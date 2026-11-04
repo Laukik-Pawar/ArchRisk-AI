@@ -1,0 +1,11 @@
+E-commerce platform architecture (demonstration)
+The API Gateway depends on Authentication Service, Product Catalog, Cart Service, and Order Service for its customer-facing endpoints.
+The Product Catalog depends on Catalog Database and Cache Service.
+The Cart Service depends on Cache Service and Inventory Service.
+The Order Service depends on Payment Service, Inventory Service, Order Database, and Message Queue.
+The Payment Service depends on Payment Provider and Order Database.
+The Inventory Service depends on Inventory Database and Message Queue.
+The Notification Service depends on Message Queue.
+The Authentication Service depends on User Database.
+The Message Queue and the databases are infrastructure components. The Payment Provider is an external integration.
+Dependencies are directed from consumer to required provider. For this simplified demonstration, every dependency is mandatory, and a failed provider causes its consumers to fail transitively. This intentionally overestimates risk where redundancy or graceful degradation exists.
