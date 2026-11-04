@@ -1,11 +1,13 @@
 {
-  "train_graphs": 16,
-  "test_graphs": 4,
-  "test_nodes": 60,
-  "gnn_mae": 0.101660247359957,
-  "gnn_rmse": 0.1379211484014492,
-  "gnn_spearman": 0.3609276569037564,
-  "heuristic_spearman": 0.20924639272555384,
+  "indegree_baseline_mae": 0.0630952380952381,
+  "indegree_baseline_spearman": 0.8303431972663173,
+  "train_graphs": 96,
+  "test_graphs": 24,
+  "test_nodes": 360,
+  "gnn_mae": 0.042463267539140016,
+  "gnn_rmse": 0.061907480750562065,
+  "gnn_spearman": 0.89226171538991,
+  "heuristic_spearman": 0.04056838719461145,
   "label_definition": "fraction of other nodes transitively dependent on failed component",
   "generalization_limit": "Held-out synthetic variants of ONE architecture, not independent architectures"
 }

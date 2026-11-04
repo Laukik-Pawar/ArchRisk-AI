@@ -227,17 +227,32 @@ def train_and_evaluate(base, variants=120, epochs=160, seed=42):
             x,a=features(g,order);y=torch.tensor([simulation_scores(g)[n] for n in order],dtype=torch.float32)
             losses.append(nn.functional.mse_loss(model(x,a),y))
         loss=torch.stack(losses).mean();loss.backward();optimizer.step()
-    model.eval(); preds=[];labels=[];heur=[]
+    model.eval(); preds=[];labels=[];heur=[];indegree_baseline = []
     with torch.no_grad():
         for g in test:
             x,a=features(g,order)
             preds.extend(model(x,a).numpy().tolist())
             scores=simulation_scores(g);labels.extend([scores[n] for n in order])
-            ht=risk_table(g).set_index('id')['heuristic_score'];heur.extend([ht[n] for n in order])
+            ht=risk_table(g).set_index('id')['heuristic_score'];heur.extend([ht[n] for n in order]);denominator=max(len(g)-1,1)
+            indegree_baseline.extend([g.in_degree(n)/denominator for n in order])
         x,a=features(base,order);base_preds=model(x,a).numpy()
     corr=spearmanr(preds,labels).statistic
     heuristic_corr=spearmanr(heur,labels).statistic
-    metrics={'train_graphs':len(train),'test_graphs':len(test),'test_nodes':len(labels),'gnn_mae':float(mean_absolute_error(labels,preds)),'gnn_rmse':float(np.sqrt(mean_squared_error(labels,preds))),'gnn_spearman':float(corr) if np.isfinite(corr) else None,'heuristic_spearman':float(heuristic_corr) if np.isfinite(heuristic_corr) else None,'label_definition':'fraction of other nodes transitively dependent on failed component','generalization_limit':'Held-out synthetic variants of ONE architecture, not independent architectures'}
+    
+    indegree_corr = spearmanr(
+        indegree_baseline, labels
+    ).statistic
+
+    indegree_mae = mean_absolute_error(
+        labels, indegree_baseline
+    )
+
+    metrics={"indegree_baseline_mae": float(indegree_mae),
+"indegree_baseline_spearman": (
+    float(indegree_corr)
+    if np.isfinite(indegree_corr)
+    else None
+),'train_graphs':len(train),'test_graphs':len(test),'test_nodes':len(labels),'gnn_mae':float(mean_absolute_error(labels,preds)),'gnn_rmse':float(np.sqrt(mean_squared_error(labels,preds))),'gnn_spearman':float(corr) if np.isfinite(corr) else None,'heuristic_spearman':float(heuristic_corr) if np.isfinite(heuristic_corr) else None,'label_definition':'fraction of other nodes transitively dependent on failed component','generalization_limit':'Held-out synthetic variants of ONE architecture, not independent architectures'}
     return model,dict(zip(order,map(float,base_preds))),metrics
 
 
