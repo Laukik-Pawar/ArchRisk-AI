@@ -15,11 +15,22 @@ from scipy.stats import spearmanr
 import time
 import random
 from google.genai.errors import ServerError
+from dotenv import load_dotenv
+
+load_dotenv()
 
 ROOT = Path(__file__).resolve().parent
 TYPES = ['gateway','service','database','cache','queue','external','other']
 
 
+def gemini_client():
+    if not os.environ.get("GEMINI_API_KEY"):
+        raise RuntimeError(
+            "GEMINI_API_KEY is required."
+        )
+
+    from google import genai
+    return genai.Client(api_key=os.environ["GEMINI_API_KEY"])
 
 def validate(data):
     if not isinstance(data, dict):
