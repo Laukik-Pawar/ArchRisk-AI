@@ -13,21 +13,21 @@
       "id": "authentication_service",
       "name": "Authentication Service",
       "type": "service",
-      "description": "Provides authentication capabilities",
+      "description": "Handles authentication for the platform",
       "criticality": 0.5
     },
     {
       "id": "product_catalog",
       "name": "Product Catalog",
       "type": "service",
-      "description": "Manages product catalog data",
+      "description": "Manages product catalog information",
       "criticality": 0.5
     },
     {
       "id": "cart_service",
       "name": "Cart Service",
       "type": "service",
-      "description": "Manages shopping cart operations",
+      "description": "Manages user shopping carts",
       "criticality": 0.5
     },
     {
@@ -38,10 +38,17 @@
       "criticality": 0.5
     },
     {
-      "id": "payment_service",
-      "name": "Payment Service",
-      "type": "service",
-      "description": "Processes payments",
+      "id": "catalog_database",
+      "name": "Catalog Database",
+      "type": "database",
+      "description": "Infrastructure database storing catalog data",
+      "criticality": 0.5
+    },
+    {
+      "id": "cache_service",
+      "name": "Cache Service",
+      "type": "cache",
+      "description": "Caching service for catalog and cart data",
       "criticality": 0.5
     },
     {
@@ -52,59 +59,52 @@
       "criticality": 0.5
     },
     {
-      "id": "notification_service",
-      "name": "Notification Service",
+      "id": "payment_service",
+      "name": "Payment Service",
       "type": "service",
-      "description": "Handles notifications",
-      "criticality": 0.5
-    },
-    {
-      "id": "catalog_database",
-      "name": "Catalog Database",
-      "type": "database",
-      "description": "Infrastructure database component for catalog",
-      "criticality": 0.5
-    },
-    {
-      "id": "cache_service",
-      "name": "Cache Service",
-      "type": "cache",
-      "description": "Caching service component",
+      "description": "Processes payments",
       "criticality": 0.5
     },
     {
       "id": "order_database",
       "name": "Order Database",
       "type": "database",
-      "description": "Infrastructure database component for orders",
-      "criticality": 0.5
-    },
-    {
-      "id": "inventory_database",
-      "name": "Inventory Database",
-      "type": "database",
-      "description": "Infrastructure database component for inventory",
-      "criticality": 0.5
-    },
-    {
-      "id": "user_database",
-      "name": "User Database",
-      "type": "database",
-      "description": "Infrastructure database component for user data",
+      "description": "Infrastructure database storing order and payment data",
       "criticality": 0.5
     },
     {
       "id": "message_queue",
       "name": "Message Queue",
       "type": "queue",
-      "description": "Infrastructure messaging queue component",
+      "description": "Infrastructure component for async messaging",
       "criticality": 0.5
     },
     {
       "id": "payment_provider",
       "name": "Payment Provider",
       "type": "external",
-      "description": "External payment integration provider",
+      "description": "External payment integration",
+      "criticality": 0.5
+    },
+    {
+      "id": "inventory_database",
+      "name": "Inventory Database",
+      "type": "database",
+      "description": "Infrastructure database storing inventory data",
+      "criticality": 0.5
+    },
+    {
+      "id": "notification_service",
+      "name": "Notification Service",
+      "type": "service",
+      "description": "Handles notifications via message queue",
+      "criticality": 0.5
+    },
+    {
+      "id": "user_database",
+      "name": "User Database",
+      "type": "database",
+      "description": "Infrastructure database storing user data",
       "criticality": 0.5
     }
   ],
