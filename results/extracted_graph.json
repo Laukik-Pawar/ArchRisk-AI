@@ -1,185 +1,185 @@
 {
-  "system": "E-commerce microservices reference architecture",
-  "edge_semantics": "source depends_on target",
+  "system": "E-commerce platform architecture",
+  "edge_semantics": "source depends on target",
   "components": [
     {
-      "id": "gateway",
+      "id": "api_gateway",
       "name": "API Gateway",
       "type": "gateway",
-      "description": "Routes customer-facing requests",
-      "criticality": 0.9
-    },
-    {
-      "id": "auth",
-      "name": "Authentication Service",
-      "type": "service",
-      "description": "Authenticates customers",
-      "criticality": 0.8
-    },
-    {
-      "id": "catalog",
-      "name": "Product Catalog",
-      "type": "service",
-      "description": "Provides product listings",
-      "criticality": 0.7
-    },
-    {
-      "id": "cart",
-      "name": "Cart Service",
-      "type": "service",
-      "description": "Manages shopping carts",
-      "criticality": 0.7
-    },
-    {
-      "id": "orders",
-      "name": "Order Service",
-      "type": "service",
-      "description": "Processes customer orders",
-      "criticality": 1.0
-    },
-    {
-      "id": "payment",
-      "name": "Payment Service",
-      "type": "service",
-      "description": "Handles payments",
-      "criticality": 1.0
-    },
-    {
-      "id": "inventory",
-      "name": "Inventory Service",
-      "type": "service",
-      "description": "Manages product stock",
-      "criticality": 0.9
-    },
-    {
-      "id": "notification",
-      "name": "Notification Service",
-      "type": "service",
-      "description": "Sends notifications asynchronously",
-      "criticality": 0.3
-    },
-    {
-      "id": "catalog_db",
-      "name": "Catalog Database",
-      "type": "database",
-      "description": "Stores product catalog",
-      "criticality": 0.8
-    },
-    {
-      "id": "order_db",
-      "name": "Order Database",
-      "type": "database",
-      "description": "Stores order and payment records",
-      "criticality": 1.0
-    },
-    {
-      "id": "inventory_db",
-      "name": "Inventory Database",
-      "type": "database",
-      "description": "Stores inventory state",
-      "criticality": 0.9
-    },
-    {
-      "id": "user_db",
-      "name": "User Database",
-      "type": "database",
-      "description": "Stores customer identities",
-      "criticality": 0.8
-    },
-    {
-      "id": "cache",
-      "name": "Cache Service",
-      "type": "cache",
-      "description": "Provides cached data",
+      "description": "Handles customer-facing endpoints",
       "criticality": 0.5
     },
     {
-      "id": "queue",
-      "name": "Message Queue",
-      "type": "queue",
-      "description": "Transfers asynchronous events",
-      "criticality": 0.6
+      "id": "authentication_service",
+      "name": "Authentication Service",
+      "type": "service",
+      "description": "Provides authentication capabilities",
+      "criticality": 0.5
     },
     {
-      "id": "provider",
+      "id": "product_catalog",
+      "name": "Product Catalog",
+      "type": "service",
+      "description": "Manages product catalog data",
+      "criticality": 0.5
+    },
+    {
+      "id": "cart_service",
+      "name": "Cart Service",
+      "type": "service",
+      "description": "Manages shopping cart operations",
+      "criticality": 0.5
+    },
+    {
+      "id": "order_service",
+      "name": "Order Service",
+      "type": "service",
+      "description": "Manages order processing",
+      "criticality": 0.5
+    },
+    {
+      "id": "payment_service",
+      "name": "Payment Service",
+      "type": "service",
+      "description": "Processes payments",
+      "criticality": 0.5
+    },
+    {
+      "id": "inventory_service",
+      "name": "Inventory Service",
+      "type": "service",
+      "description": "Manages product inventory",
+      "criticality": 0.5
+    },
+    {
+      "id": "notification_service",
+      "name": "Notification Service",
+      "type": "service",
+      "description": "Handles notifications",
+      "criticality": 0.5
+    },
+    {
+      "id": "catalog_database",
+      "name": "Catalog Database",
+      "type": "database",
+      "description": "Infrastructure database component for catalog",
+      "criticality": 0.5
+    },
+    {
+      "id": "cache_service",
+      "name": "Cache Service",
+      "type": "cache",
+      "description": "Caching service component",
+      "criticality": 0.5
+    },
+    {
+      "id": "order_database",
+      "name": "Order Database",
+      "type": "database",
+      "description": "Infrastructure database component for orders",
+      "criticality": 0.5
+    },
+    {
+      "id": "inventory_database",
+      "name": "Inventory Database",
+      "type": "database",
+      "description": "Infrastructure database component for inventory",
+      "criticality": 0.5
+    },
+    {
+      "id": "user_database",
+      "name": "User Database",
+      "type": "database",
+      "description": "Infrastructure database component for user data",
+      "criticality": 0.5
+    },
+    {
+      "id": "message_queue",
+      "name": "Message Queue",
+      "type": "queue",
+      "description": "Infrastructure messaging queue component",
+      "criticality": 0.5
+    },
+    {
+      "id": "payment_provider",
       "name": "Payment Provider",
       "type": "external",
-      "description": "External payment processing integration",
-      "criticality": 1.0
+      "description": "External payment integration provider",
+      "criticality": 0.5
     }
   ],
   "dependencies": [
     {
-      "source": "gateway",
-      "target": "auth"
+      "source": "api_gateway",
+      "target": "authentication_service"
     },
     {
-      "source": "gateway",
-      "target": "catalog"
+      "source": "api_gateway",
+      "target": "product_catalog"
     },
     {
-      "source": "gateway",
-      "target": "cart"
+      "source": "api_gateway",
+      "target": "cart_service"
     },
     {
-      "source": "gateway",
-      "target": "orders"
+      "source": "api_gateway",
+      "target": "order_service"
     },
     {
-      "source": "catalog",
-      "target": "catalog_db"
+      "source": "product_catalog",
+      "target": "catalog_database"
     },
     {
-      "source": "catalog",
-      "target": "cache"
+      "source": "product_catalog",
+      "target": "cache_service"
     },
     {
-      "source": "cart",
-      "target": "cache"
+      "source": "cart_service",
+      "target": "cache_service"
     },
     {
-      "source": "cart",
-      "target": "inventory"
+      "source": "cart_service",
+      "target": "inventory_service"
     },
     {
-      "source": "orders",
-      "target": "payment"
+      "source": "order_service",
+      "target": "payment_service"
     },
     {
-      "source": "orders",
-      "target": "inventory"
+      "source": "order_service",
+      "target": "inventory_service"
     },
     {
-      "source": "orders",
-      "target": "order_db"
+      "source": "order_service",
+      "target": "order_database"
     },
     {
-      "source": "orders",
-      "target": "queue"
+      "source": "order_service",
+      "target": "message_queue"
     },
     {
-      "source": "payment",
-      "target": "provider"
+      "source": "payment_service",
+      "target": "payment_provider"
     },
     {
-      "source": "payment",
-      "target": "order_db"
+      "source": "payment_service",
+      "target": "order_database"
     },
     {
-      "source": "inventory",
-      "target": "inventory_db"
+      "source": "inventory_service",
+      "target": "inventory_database"
     },
     {
-      "source": "inventory",
-      "target": "queue"
+      "source": "inventory_service",
+      "target": "message_queue"
     },
     {
-      "source": "notification",
-      "target": "queue"
+      "source": "notification_service",
+      "target": "message_queue"
     },
     {
-      "source": "auth",
-      "target": "user_db"
+      "source": "authentication_service",
+      "target": "user_database"
     }
   ]
 }

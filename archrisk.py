@@ -20,13 +20,69 @@ ROOT = Path(__file__).resolve().parent
 TYPES = ['gateway','service','database','cache','queue','external','other']
 
 
+
 def validate(data):
-    nodes = data['components']; edges = data['dependencies']
-    ids = [n['id'] for n in nodes]
-    if len(ids) != len(set(ids)) or not ids: raise ValueError('Missing or duplicate component IDs')
-    if any(e['source'] not in ids or e['target'] not in ids for e in edges): raise ValueError('Dependency references unknown component')
-    if any(e['source'] == e['target'] for e in edges): raise ValueError('Self-dependency not supported')
+    if not isinstance(data, dict):
+        raise ValueError("Architecture must be a JSON object.")
+
+    nodes = data.get("components")
+    edges = data.get("dependencies")
+
+    if not isinstance(nodes, list) or len(nodes) < 2:
+        raise ValueError("Architecture requires at least two components.")
+
+    if not isinstance(edges, list):
+        raise ValueError("Dependencies must be a list.")
+
+    ids = set()
+
+    for node in nodes:
+        if not isinstance(node, dict):
+            raise ValueError("Each component must be an object.")
+
+        for field in ("id", "name", "type"):
+            if not isinstance(node.get(field), str) or not node[field].strip():
+                raise ValueError(f"Invalid component field: {field}")
+
+        if node["id"] in ids:
+            raise ValueError(f"Duplicate component ID: {node['id']}")
+
+        ids.add(node["id"])
+
+        if node["type"] not in TYPES:
+            raise ValueError(f"Unsupported component type: {node['type']}")
+
+        criticality = node.get("criticality", 0.5)
+
+        if (
+            isinstance(criticality, bool)
+            or not isinstance(criticality, (int, float))
+            or not np.isfinite(criticality)
+            or not 0 <= criticality <= 1
+        ):
+            raise ValueError(f"Invalid criticality for {node['id']}")
+
+        node["criticality"] = float(criticality)
+        node.setdefault("description", "")
+
+        if not isinstance(node["description"], str):
+            raise ValueError(f"Invalid description for {node['id']}")
+
+    for edge in edges:
+        if not isinstance(edge, dict):
+            raise ValueError("Each dependency must be an object.")
+
+        source = edge.get("source")
+        target = edge.get("target")
+
+        if source not in ids or target not in ids:
+            raise ValueError(f"Unknown dependency: {source} -> {target}")
+
+        if source == target:
+            raise ValueError("Self-dependencies are not supported.")
+
     return data
+
 
 
 def gemini_client():
@@ -199,13 +255,16 @@ def recommendations(g, df):
             'are critical and why. Scores represent simulated impact, NOT failure probability. '
             'Do not invent missing dependencies, redundancy, or availability guarantees. '
             'Evidence: '+json.dumps(evidence))
+    
     client = gemini_client()
 
-    response = client.models.generate_content(
-        model=os.environ.get('GEMINI_MODEL', 'gemini-3.8-flash'),
+    response = call_gemini_with_retry(
+        client=client,
+        model=os.environ.get("GEMINI_MODEL", "gemini-3.8-flash"),
         contents=prompt,
         config=types.GenerateContentConfig(temperature=0),
     )
+                                                                                
     if not response.text:
         raise RuntimeError('Gemini returned empty recommendations.')
     return response.text
